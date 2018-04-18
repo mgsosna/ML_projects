@@ -29,4 +29,7 @@ Function for performing linear regression on any-dimensional input data via grad
 
 ## 3. Results
 
+![](https://i.imgur.com/WVdQ8G0.png)
+
+
 ![](https://i.imgur.com/vr20zSQ.png)
