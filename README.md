@@ -23,3 +23,10 @@ This repository includes the following helper functions:
 Inspired by [Andrew Ng](http://www.andrewng.org/)'s machine learning Coursera course, I decided to write a function that performs linear regression via [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent).
 
 Function for performing linear regression on any-dimensional input data via gradient descent, with visualizations and comparisons to the analytical solution
+
+
+
+
+## 3. Results
+
+![](https://i.imgur.com/vr20zSQ.png)
