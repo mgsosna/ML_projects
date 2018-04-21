@@ -20,7 +20,11 @@ This repository also includes the following helper functions:
 [grad_desc_lm.R](grad_desc_lm.R) and [grad_desc_lm.py](grad_desc_lm.py) include all functions, and [grad_desc_demo.R](grad_desc_demo.R) includes code for visualizations.
 
 ## 2. Background
-How can we quantify the relationship between two variables? It's intuitive to understand that the less I sleep, the grumpier I'll be when I wake up; or that the more I study, the better I do on the exam. But *how much better* should I expect to do on my exam *for every additional hour* I study? To answer these sorts of questions, we turn to [regression](https://en.wikipedia.org/wiki/Linear_regression)
+How can we quantify the relationship between two variables? It's intuitive to understand that the less I sleep, the grumpier I'll be when I wake up; or that the more I study, the better I do on the exam. But *how much better* should I expect to do on my exam *for every additional hour* I study? 
+
+<img align="right" src="https://i.imgur.com/dkcjBP5.png">
+
+One way to answer these sorts of questions is with [linear regression](https://en.wikipedia.org/wiki/Linear_regression). A regression is a model that takes in some continuous input and spits out a continuous output (in contrast to classification, which takes in an input and spits out a discrete output). So for 1.25 hours of studying I should get a 67%; for 3.9 hours of studying I should get an 81%, etc.  
 
 
 
