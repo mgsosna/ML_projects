@@ -21,14 +21,15 @@ This repository also includes the following helper functions:
 
 ## 2. Background
 ### 2.1 Regression
-How can we quantify the relationship between two variables? It's intuitive to understand that the less I sleep, the grumpier I'll be when I wake up; or that the more I study, the better I do on the exam. But *how much better* should I expect to do on my exam *for every additional hour* I study? 
-
-<img align="right" src="https://i.imgur.com/1ltmiKM.png">
+<img align="right" src="https://i.imgur.com/1ltmiKM.png"> How can we quantify the relationship between two variables? It's intuitive to understand that the less I sleep, the grumpier I'll be when I wake up; or that the more I study, the better I do on the exam. But *how much better* should I expect to do on my exam *for every additional hour* I study? 
 
 One way to answer these sorts of questions is with [linear regression](https://en.wikipedia.org/wiki/Linear_regression). A regression is a model that takes in some continuous input and spits out a continuous output (in contrast to classification, which takes in an input and spits out a discrete output). So for 1.25 hours of studying I should get a 67%; for 3.9 hours of studying I should get an 81%, etc.  
 ### 2.2 Mean squared error
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" title="MSE = \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2" /></a>
+
+
+![](https://i.imgur.com/8G5SCBQ.png)
 
 
 
