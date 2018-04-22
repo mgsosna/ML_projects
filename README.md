@@ -2,7 +2,7 @@
 # Multivariate linear regression via gradient descent
 
 ## 1. Abstract
-This repository contains a function, `gd_lm`, that performs a linear regression via gradient descent on any-dimensional data. The arguments for `gd_lm` are as follows:
+This repository contains a function, `gd_lm`, that performs a linear regression via gradient descent on any-dimensional data. This function is an advancement on existing gradient descent work in its ease of visualizing the gradient descent process on any number of dimensions, observations, or strength of relationship in X, as well as easily adjusting how the algorithm works. The arguments for `gd_lm` are as follows:
 * `X`: input data
 * `y`: output data
 * `alpha`: the learning rate
@@ -17,7 +17,7 @@ This repository also includes the following helper functions:
 * `analytical_reg`: calculate the analytical solution for N-dimensional data, when N > 1 (similar to R's `lm` function, but easier for iterating in a parameter scan)
 * `gen_preds`: generate model predictions on any-dimensional data, given a set of regression coefficients
 
-[grad_desc_lm.R](grad_desc_lm.R) and [grad_desc_lm.py](grad_desc_lm.py) include all functions, and [grad_desc_demo.R](grad_desc_demo.R) includes code for visualizations.
+[grad_desc_lm.R](grad_desc_lm.R) includes all functions, and [grad_desc_demo.R](grad_desc_demo.R) includes code for visualizations.
 
 ## 2. Background
 ### 2.1 Regression
@@ -43,25 +43,37 @@ So we have a way to measure how bad our regression is, but that's still avoiding
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" target="_blank"><img src="https://latex.codecogs.com/gif.latex?(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" title="(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" /></a>
 
-`X` is a matrix of input values. For our simple example of hours studied versus exam score, our matrix would only have one column: hours studied. (Each row would be a different student's number of hours studied.) But we could run a regression with many more variables, such as *hours since student last ate*, *hours of sleep last night*, etc. The data for each of these additional variables would get their own column.
+`X` is a matrix of input values. For our simple example of hours studied versus exam score, our matrix would only have one column: hours studied. (Each row would be a different student's number of hours studied.) But we could run a regression with many more variables, such as *hours since student last ate*, *hours of sleep last night*, etc. Each additional variable would get its own column in `X`. `y`, meanwhile, is the output: exam score.
 
+This matrix approximation is what R uses in its `lm` function. You can check for yourself with `solve(t(X) %*% X) %*% t(X) %*% y`.
 
-Inspired by [Andrew Ng](http://www.andrewng.org/)'s machine learning Coursera course, I decided to write a function that performs linear regression via [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent).
+### 2.4 Method 2: gradient descent
+Inspired by [Andrew Ng](http://www.andrewng.org/)'s machine learning Coursera course, I decided to write a function that performs linear regression via [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent). Gradient descent is a way to find the minimum of a function. Think of it as a robot searching taking steps through a landscape of hills and valleys and trying to find the lowest valley. We can use gradient descent to find optimal values for our coefficients. 
 
-
-
-
-**To optimize the model intercept, iterate this equation:** <br><br>
+**To optimize the model intercept, we iterate this equation:** <br><br>
 <a href="https://www.codecogs.com/eqnedit.php?latex=\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)" title="\theta_0(t) = \theta_0(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)" /></a>
 
 <br>
 
-**To optimize the slope for each dimension (*d*) of the input data, iterate this equation:** <br><br>
+**To optimize the slope for each dimension (*d*) of the input data, we iterate this equation:** <br><br>
 <a href="https://www.codecogs.com/eqnedit.php?latex=\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" title="\theta_0(t) = \theta_0(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" /></a>
 
+Above, `alpha` refers to the learning rate, or the size of the step our model takes with each iteration. The errors give each coefficient a direction to move, but our learning rate determines how fast we move in that direction. There's a balance to strike here: too large a step size means we can overshoot our target, but too small a rate means it takes a long time to get to the optimal coefficient value.
+
 ## 3. Results
+### 3.1 Number of iterations until convergence
+Our function allows for easy visualization of how linear regression works. Below left, we see the mean squared error decrease over time as we apply gradient descent to our data. Even with different starting estimates of the slope and intercept (each run of the algorithm), we end up converging on an accurate guess.
 
 ![](https://i.imgur.com/ZrYHIVq.png)
 
+Gradient descent will keep running forever unless we give it some stopping conditions. We can either tell it to stop running after a certain number of iterations, or we can set a stop threshold: we stop once model improvement drops below some threshold (measured by mean squared error). Above right, we can visualize the number of iterations it takes to get to the 0.001 improvement level when X is in 1 through 6 dimensions: one-dimensional data takes no time at all, whereas by the time you're in six dimensions, it's taking thousands of iterations to get to that level of accuracy.
+
+### 3.2 Number of runs versus number of iterations
+When we run our gradient descent, we can choose how many iterations to allow the algorithm to run. We can also run the algorithm multiple times, as sometimes starting from a different set of initial values can be helpful. How useful is it to let our model run longer versus give it more runs? The heatmap below gives us some insight to this question for input data of varying dimensions. The colors are set relative to the analytical solution: a gradient descent MSE of 120 versus the analytical solution's 100 gives us a score of 1.2, for example.
 
 ![](https://i.imgur.com/vr20zSQ.png)
+
+For one-dimensional data, we're always doing fairly well no matter how many runs and iterations we let our model run for. In higher-dimensional data, we see that giving our model more runs helps, but not nearly as much as letting the model run for longer: when we let gradient descent run for 5000 iterations, we get coefficient values whose MSE is close to the analytical solution.
+
+## 4. Future directions
+Let me know what you think! It'd be interesting to tinker with the learning rate of gradient descent, or the amount of data in X. Does our model converge more quickly or more slowly when the dataset is larger? It'd also be interesting to run parameter scans on datasets with varying relationships: for ease in writing this post, `gen_data` always produces a positive relationship with intercept and slope close to 0 and 1, but it'd be interesting to see how this post's figures hold up when the intercept and slope are farther from starting conditions.
