@@ -20,7 +20,7 @@ This repository also includes the following helper functions:
 
 ## 2. Background
 ### 2.1 Regression
-<img align="right" src="https://i.imgur.com/1ltmiKM.png"> How can we quantify the relationship between two variables? It's intuitive to understand that, say, the more I study, the better I do on the exam. You can take fifty students, track how much they study and what their exam score was, then plot it and get something like the plot on the right. We can clearly see that there is a positive trend: the more I study, the better I do. 
+<img align="right" src="https://i.imgur.com/1ltmiKM.png"> How can we quantify the relationship between two variables? It's intuitive to understand that, say, the more I study, the better I do on the exam. Let's say we take fifty students, track how much they studied for an exam and then their resulting score, and then visualize the data and see something like the plot on the right. We can clearly see that there is a positive trend: the more a student studied, the higher they scored on the exam. 
 
 But how can we quantify this relationship? **_How much better_** should I expect to do on my exam **_for every additional hour_** I study? One way to answer this question is with [linear regression](https://en.wikipedia.org/wiki/Linear_regression). A regression is a model that takes in some continuous input (e.g. number of hours studied) and spits out a continuous output (e.g. exam score). So for 1.25 hours of studying I should get a 59%; for 3.87 hours of studying I should get an 81%, etc. A linear regression is just a line that you draw though the data. Here's the mathematical form:
 
