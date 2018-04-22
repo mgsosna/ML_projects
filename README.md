@@ -24,9 +24,9 @@ This repository also includes the following helper functions:
 <img align="right" src="https://i.imgur.com/1ltmiKM.png"> How can we quantify the relationship between two variables? It's intuitive to understand that, say, the more I study, the better I do on the exam. You can take fifty students, track how much they study and what their exam score was, then plot it and get something like the plot on the right. We can clearly see that there is a positive trend: the more I study, the better I do. 
 
 But how can we quantify this relationship? **_How much better_** should I expect to do on my exam **_for every additional hour_** I study? One way to answer this question is with [linear regression](https://en.wikipedia.org/wiki/Linear_regression). A regression is a model that takes in some continuous input (e.g. number of hours studied) and spits out a continuous output (e.g. exam score). So for 1.25 hours of studying I should get a 59%; for 3.87 hours of studying I should get an 81%, etc. A linear regression is just a line that you draw though the data. Here's the mathematical form:
-
-<img align="right" src="https://latex.codecogs.com/gif.latex?\hat{y}=\beta_0&space;&plus;&space;\beta_1x">
-
+<br>
+<img align="center" src="https://latex.codecogs.com/gif.latex?\hat{y}=\beta_0&space;&plus;&space;\beta_1x">
+<br>
 If reads as "the model's estimate of `y` equals the intercept + the slope * `x`." The intercept is the expected exam score for someone who didn't study at all, and the slope is the change in exam score for each additional hour of studying. The intercept and the slope are called **coefficients.**
 
 ### 2.2 Mean squared error
