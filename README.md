@@ -27,23 +27,23 @@ But how can we quantify this relationship? **_How much better_** should I expect
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\hat{y}=\beta_0&space;&plus;&space;\beta_1x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\hat{y}=\beta_0&space;&plus;&space;\beta_1x" title="\hat{y}=\beta_0 + \beta_1x" /></a>
 
-If reads as "the model's estimate of `y` equals the intercept + the slope * `x`." 
+If reads as "the model's estimate of `y` equals the intercept + the slope * `x`." The intercept is the expected exam score for someone who didn't study at all, and the slope is the change in exam score for each additional hour of studying. The intercept and the slope are called **coefficients.**
 
 ### 2.2 Mean squared error
-How can we tell if our regression is a good fit for the data? We can draw lots of lines through our data, and most of them won't describe the data well. Of the plots below, for example, the left and middle linear regressions clearly don't describe the data. 
+How can we tell if our regression is a good fit for the data? We can draw lots of lines through our data, and most of them won't describe the data well. Of the plots below, for example, the left and middle linear regressions clearly don't describe how "number of hours studied" and "exam score" relate to each other. 
 
 ![](https://i.imgur.com/8G5SCBQ.png)
 
-We can quantify **how bad** the regression is through something called [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error). This is a measure of the average residual - the average distance between the model's prediction (the score it thinks the student got, given the amount they studied) and the actual output (the score the student actually got). 
+We can quantify **how bad** the regression is through something called [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error). This is a measure of the average residual - the average distance between the model's prediction (the score it thinks the student got, given the amount they studied) and the actual output (the score the student actually got). We square the residuals so that it doesn't matter if the model predicted a value lower than versus greater than the actual value. The equation for mean squared error is below:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" title="MSE = \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2" /></a>
 
-
-
+### 2.3 Method 1: analytical solution
+So we have a way to measure how bad our regression is, but that's still avoiding the point: how do we find the values for our coefficients? Given some data, where should we set the intercept and the slope? It turns out that we can find the optimal solution - or get very close - for the coefficients using matrix multiplication, as shown below:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" target="_blank"><img src="https://latex.codecogs.com/gif.latex?(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" title="(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" /></a>
 
-
+`X` is a matrix of input values. For our simple example of hours studied versus exam score, our matrix would only have one column: hours studied. (Each row would be a different student's number of hours studied.) But we could run a regression with many more variables, such as *hours since student last ate*, *hours of sleep last night*, etc. The data for each of these additional variables would get their own column.
 
 
 Inspired by [Andrew Ng](http://www.andrewng.org/)'s machine learning Coursera course, I decided to write a function that performs linear regression via [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent).
