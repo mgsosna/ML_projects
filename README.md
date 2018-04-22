@@ -26,10 +26,10 @@ But how can we quantify this relationship? **_How much better_** should I expect
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=\hat{y}=\beta_0&space;&plus;&space;\beta_1x" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\hat{y}=\beta_0&space;&plus;&space;\beta_1x" title="\hat{y}=\beta_0 + \beta_1x" /></a>
 
-It reads as "the model's estimate of `y` equals the intercept + the slope * `x`." The intercept is the expected exam score for someone who didn't study at all, and the slope is the change in exam score for each additional hour of studying. The intercept and the slope are called **coefficients.**
+It reads as "the model's estimate of `y` equals the intercept + the slope * `x`." The intercept is the expected exam score for someone who didn't study at all, and the slope is the change in exam score for each additional hour of studying. The intercept and the slope are called **coefficients.** Note that I'm using the words "model" and "regression" here interchangeably.
 
 ### 2.2 Mean squared error
-How can we tell if our regression is a good fit for the data? We can draw lots of lines through our data, and most of them won't describe the data well. Of the plots below, for example, the left and middle linear regressions clearly don't describe how "number of hours studied" and "exam score" relate to each other. 
+How can we tell if our regression is a good fit for the data? We can draw plenty of lines through our data, but most of them won't describe the data well. Of the plots below, for example, the left and middle linear regressions clearly don't describe how "number of hours studied" and "exam score" relate to each other. 
 
 ![](https://i.imgur.com/8G5SCBQ.png)
 
