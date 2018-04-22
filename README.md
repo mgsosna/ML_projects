@@ -21,7 +21,7 @@ This repository also includes the following helper functions:
 
 ## 2. Background
 ### 2.1 Regression
-<img align="right" src="https://i.imgur.com/1ltmiKM.png"> How can we quantify the relationship between two variables? It's intuitive to understand that, say, the more I study, the better I do on the exam. You can take fifty students, track how much they study and what their exam score was, then plot it and get something like the plot on the right. We can see that there is clearly a positive trend. 
+<img align="right" src="https://i.imgur.com/1ltmiKM.png"> How can we quantify the relationship between two variables? It's intuitive to understand that, say, the more I study, the better I do on the exam. You can take fifty students, track how much they study and what their exam score was, then plot it and get something like the plot on the right. We can clearly see that there is a positive trend: the more I study, the better I do. 
 
 But how can we quantify this relationship? **_How much better_** should I expect to do on my exam **_for every additional hour_** I study? One way to answer this question is with [linear regression](https://en.wikipedia.org/wiki/Linear_regression). A regression is a model that takes in some continuous input (e.g. number of hours studied) and spits out a continuous output (e.g. exam score). This in contrast to classification, which takes in an input and spits out a discrete output). So for 1.25 hours of studying I should get a 67%; for 3.9 hours of studying I should get an 81%, etc.
 
@@ -31,6 +31,11 @@ But how can we quantify this relationship? **_How much better_** should I expect
 
 
 ![](https://i.imgur.com/8G5SCBQ.png)
+
+
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" target="_blank"><img src="https://latex.codecogs.com/gif.latex?(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" title="(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" /></a>
+
 
 
 
