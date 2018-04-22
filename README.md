@@ -44,7 +44,7 @@ So we have a way to measure how bad our regression is, but that's still avoiding
 
 `X` is a matrix of input values. For our simple example of hours studied versus exam score, our matrix would only have one column: hours studied. (Each row would be a different student's number of hours studied.) But we could run a regression with many more variables, such as *hours since student last ate*, *hours of sleep last night*, etc. Each additional variable would get its own column in `X`. `y`, meanwhile, is the output: exam score.
 
-This matrix approximation is what R uses in its `lm` function. You can check for yourself with `solve(t(X) %*% X) %*% t(X) %*% y`.
+This matrix approximation is what R uses in its `lm` function. You can check for yourself with `solve(t(X) %*% X) %*% t(X) %*% y`. (Note that you'll need to add a column of 1's to X before you do this.)
 
 ### 2.4 Method 2: gradient descent
 R's `lm` function is robust and incredibly fast, but I wanted to try a different approach. Inspired by [Andrew Ng](http://www.andrewng.org/)'s machine learning Coursera course, I decided to write a function that performs linear regression via [gradient descent](https://en.wikipedia.org/wiki/Gradient_descent). Gradient descent is a way to find the minimum of a function. Think of it as a robot walking around a landscape of hills and valleys and trying to find the lowest valley. We can use gradient descent to find optimal values for our coefficients. 
