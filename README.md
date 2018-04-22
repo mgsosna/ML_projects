@@ -55,7 +55,7 @@ R's `lm` function is robust and incredibly fast, but I wanted to try a different
 <br>
 
 **To optimize the slope for each dimension (*d*) of the input data, we iterate this equation:** <br><br>
-<a href="https://www.codecogs.com/eqnedit.php?latex=\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" title="\theta_0(t) = \theta_0(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\theta_d(t)&space;=&space;\theta_d(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_d(t)&space;=&space;\theta_d(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" title="\theta_d(t) = \theta_d(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)x_i" /></a>
 
 Above, `alpha` refers to the learning rate, or the size of the step our model takes with each iteration. The errors give each coefficient a direction to move, but our learning rate determines how fast we move in that direction. There's a balance to strike here: too large a step size means we can overshoot our target, but too small a rate means it takes a long time to get to the optimal coefficient value.
 
