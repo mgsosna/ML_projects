@@ -61,7 +61,7 @@ Above, `alpha` refers to the learning rate, or the size of the step our model ta
 
 ## 3. Results
 ### 3.1 Number of iterations until convergence
-Our function allows for easy visualization of how linear regression works. Below left, we see the mean squared error decrease over time as we apply gradient descent to our data. Even with different starting estimates of the slope and intercept (each run of the algorithm), we end up converging on an accurate guess.
+Our function allows for easy visualization of how linear regression via gradient descent works. Below left, we see the mean squared error decrease over time as we apply gradient descent to our data. Even with different starting estimates of the slope and intercept (each run of the algorithm), we end up converging on an accurate guess.
 
 ![](https://i.imgur.com/ZrYHIVq.png)
 
