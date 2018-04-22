@@ -89,8 +89,8 @@ gen_preds <- function(input_coeffs, input_data){
 
 #---------------------------------------------------------------------------------
 # 4. Perform multivariate linear regression via gradient descent
-gd_lm <- function(X, y, alpha = 1e-4, n_iter = 1000, figure = F, stop_thresh = 1e-5,
-                  n_runs = 5, full = F){
+gd_lm <- function(X, y, alpha = 1e-4, n_iter = 1000, stop_thresh = 1e-5, n_runs = 5,
+                  figure = F, full = F){
    
    # Note: user has to specify what the features (X) and what the output (y) are
    # - X and y can be in matrix or data.frame format
