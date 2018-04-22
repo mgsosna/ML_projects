@@ -1,4 +1,3 @@
-# [IN PROGRESS]
 # Multivariate linear regression via gradient descent
 
 ## 1. Abstract
@@ -6,10 +5,10 @@ This repository contains a function, `gd_lm`, that performs a linear regression 
 * `X`: input data
 * `y`: output data
 * `alpha`: the learning rate
-* `n_iter`: the number of iterations to take for gradient descent
-* `figure`: for 1- and 2-dimensional `X` data, should a figure be plotted?
-* `stop_thresh`: when MSE improvement falls below this value, gradient descent stops
+* `n_iter`: the number of iterations to allow gradient descent to run (if `stop_thresh` isn't reached first)
+* `stop_thresh`: when MSE improvement falls below this value, gradient descent stops (unless `n_iter` is reached first)
 * `n_runs`: number of times to run gradient descent (each with different starting conditions)
+* `figure`: for 1- and 2-dimensional `X` data, should a figure be plotted?
 * `full`: should the full MSE and coefficient trajectories be saved?
 
 This repository also includes the following helper functions:
