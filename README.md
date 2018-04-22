@@ -20,13 +20,15 @@ This repository also includes the following helper functions:
 [grad_desc_lm.R](grad_desc_lm.R) and [grad_desc_lm.py](grad_desc_lm.py) include all functions, and [grad_desc_demo.R](grad_desc_demo.R) includes code for visualizations.
 
 ## 2. Background
+### 2.1 Regression
 How can we quantify the relationship between two variables? It's intuitive to understand that the less I sleep, the grumpier I'll be when I wake up; or that the more I study, the better I do on the exam. But *how much better* should I expect to do on my exam *for every additional hour* I study? 
 
-<img align="right" src="https://i.imgur.com/dkcjBP5.png">
+<img align="right" src="https://i.imgur.com/1ltmiKM.png">
 
 One way to answer these sorts of questions is with [linear regression](https://en.wikipedia.org/wiki/Linear_regression). A regression is a model that takes in some continuous input and spits out a continuous output (in contrast to classification, which takes in an input and spits out a discrete output). So for 1.25 hours of studying I should get a 67%; for 3.9 hours of studying I should get an 81%, etc.  
+### 2.2 Mean squared error
 
-
+<a href="https://www.codecogs.com/eqnedit.php?latex=MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" title="MSE = \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2" /></a>
 
 
 
@@ -36,12 +38,12 @@ Inspired by [Andrew Ng](http://www.andrewng.org/)'s machine learning Coursera co
 
 
 **To optimize the model intercept, iterate this equation:** <br><br>
-<a href ="https://www.codecogs.com/eqnedit.php?latex=\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" title="\theta_0(t) = \theta_0(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2" /></a>
+<a href ="https://www.codecogs.com/eqnedit.php?latex=\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_0(t)&space;=&space;\theta_0(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" title="\theta_0(t) = \theta_0(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2" /></a>
 
 <br>
 
 **To optimize the slope for each dimension (*d*) of the input data, iterate this equation:** <br><br>
-<a href="https://www.codecogs.com/eqnedit.php?latex=\theta_d(t)&space;=&space;\theta_d(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2&space;x_i" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_d(t)&space;=&space;\theta_d(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2&space;x_i" title="\theta_d(t) = \theta_d(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2 x_i" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=\theta_d(t)&space;=&space;\theta_d(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2&space;x_i" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\theta_d(t)&space;=&space;\theta_d(t-1)&space;-&space;\alpha&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2&space;x_i" title="\theta_d(t) = \theta_d(t-1) - \alpha \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i) x_i" /></a>
 
 ## 3. Results
 
