@@ -38,7 +38,7 @@ We can quantify **how bad** the regression is through something called [mean squ
 <a href="https://www.codecogs.com/eqnedit.php?latex=MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?MSE&space;=&space;\frac{1}{N}&space;\sum_{i=1}^{N}(\hat{y_i}-y_i)^2" title="MSE = \frac{1}{N} \sum_{i=1}^{N}(\hat{y_i}-y_i)^2" /></a>
 
 ### 2.3 Method 1: analytical solution
-So we have a way to measure how bad our regression is, but that's still avoiding the point: how do we find the values for our coefficients? Given some data, where should we set the intercept and the slope? It turns out that we can find the optimal solution - or get very close - for the coefficients using matrix multiplication, as shown below:
+So we have a way to measure how bad our regression is, but that's still avoiding the point: how do we find the values for our coefficients? Given some data, where should we set the intercept and the slope? It turns out that we can find the optimal solution - or get very close - for the coefficients using matrix multiplication via the **normal equation method**, as shown below:
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" target="_blank"><img src="https://latex.codecogs.com/gif.latex?(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" title="(\mathbf{X'}\mathbf{X}){^{-1}}\mathbf{X}y" /></a>
 
