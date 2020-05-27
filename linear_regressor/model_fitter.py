@@ -1,4 +1,6 @@
+import logging
 import numpy as np
+from typing import Optional, Tuple
 
 
 class ModelFitter:
@@ -78,10 +80,10 @@ class ModelFitter:
     def gradient_descent(self,
                          X: np.ndarray,
                          y: np.ndarray,
-                         alpha: float = 1e-4,
-                         max_iter: int = 1000,
+                         alpha: Optional[float] = None,
+                         max_iter: int = 10000,
                          min_diff_mse: float = 1e-5,
-                         scale: bool = True) -> np.ndarray:
+                         scale: bool = True) -> Tuple[np.ndarray, list]:
         """
         | Find linear regression coefficients via gradient descent. Descent occurs
         | for n_iter or until the improvement in MSE falls below stop_thresh.
@@ -115,33 +117,64 @@ class ModelFitter:
         |  np.ndarray
         |    The best fit for linear regression coefficients
         """
-        # Initialize coefficients at random values close to zero
-        theta = np.random.normal(0, 0.5, len(y))
+        X = self._add_intercept(X)
+
+        # Initialize coefficients at zero
+        theta = np.zeros((X.shape[1], 1))
+
+        if alpha is None:
+            alpha = self._set_alpha(len(y))
 
         if scale:
             X = self.scale(X)
 
-        # Generate predictions
-        preds = self.predict(X, theta)
-        mse_old = [np.mean(preds - y) ** 2]
-
-        n_iter = 1      # First iteration occurred above
-        diff_mse = 100  # Instantiate to any large value
+        mse = []
 
         # Perform descent
-        while n_iter < max_iter and diff_mse > min_diff_mse:
-            theta = self._update_theta(theta, preds, y, alpha)
+        for i in range(max_iter):
             preds = self.predict(X, theta)
-            mse_new = self.get_mse(preds, y)
-            diff_mse = mse_new - mse_old
-            mse_old = mse_new
+            theta = self._update_theta(theta, preds, y, X, alpha)
+            mse.append(self.get_mse(preds, y))
 
-        return theta
+            # Stop if change in MSE below threshold
+            if i > 1 and (mse[i-1] - mse[i]) < min_diff_mse:
+                break
+
+            # If MSE is increasing, stop
+            if mse[i] > mse[i-1]:
+                logging.error("MSE is increasing; a smaller alpha should be used.")
+                return theta, mse
+
+        return theta, mse
+
+    def _set_alpha(self,
+                   m: int) -> float:
+        """
+        | Set alpha based on the number of samples.
+        |
+        | Examples:
+        |   10 -> 1e-3
+        |   100 -> 1e-5
+        |   1000 -> 1e-7
+        |
+        | ----------------------------------------------------------
+        | Parameters
+        | ----------
+        |  m : int
+        |    Number of samples in data
+        |
+        |
+        | Returns
+        | -------
+        |  float
+        """
+        return 10 ** -(round(np.log10(m)) * 2 + 1)
 
     def _update_theta(self,
                       theta: np.ndarray,
                       preds: np.ndarray,
-                      actuals: np.ndarray,
+                      y: np.ndarray,
+                      X: np.ndarray,
                       alpha: float) -> np.ndarray:
         """
         | Update theta via gradient descent. Derivative of squared errors is
@@ -156,8 +189,11 @@ class ModelFitter:
         |  preds : np.ndarray
         |    Vector of predictions (h(x), or y-hat)
         |
-        |  actuals : np.ndarray
-        |    Vector of actual values (y)
+        |  y : np.ndarray
+        |    Vector of target variable
+        |
+        |  X : np.ndarray
+        |    Matrix of features
         |
         |  alpha : float
         |    Learning rate
@@ -168,7 +204,7 @@ class ModelFitter:
         |  np.ndarray
         |    Updated vector of coefficients
         """
-        return theta + alpha * np.mean((preds - actuals)*actuals)
+        return theta - (1/len(y)) * alpha * (X.T.dot(preds - y))
 
     def get_mse(self,
                 preds: np.ndarray,
@@ -193,6 +229,7 @@ class ModelFitter:
         """
         return np.mean((preds - actuals) ** 2)
 
+    # TODO: fix issue with Nans
     def scale(self,
               X: np.ndarray) -> np.ndarray:
         """

@@ -53,7 +53,7 @@ class DataGenerator:
             for i in range(n_feat):
                 X[:, i] = self._create_positive_trend(n_obs, noise[i])
 
-        y = self._create_positive_trend(n_obs, self.y_noise)
+        y = np.array([self._create_positive_trend(n_obs, self.y_noise)]).T
 
         return X, y
 
