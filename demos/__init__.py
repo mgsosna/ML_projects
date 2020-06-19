@@ -1,0 +1,2 @@
+from .demo_linear_regression import run_linear_regression_demo
+# from .demo_logistic_regression import run_logistic_regression_demo

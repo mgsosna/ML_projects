@@ -1,3 +1,6 @@
+from python import DataGenerator, LinearRegressor
+
+
 def get_int_from_user(message: str) -> int:
     """
     | Get number of observations from the user.
@@ -6,10 +9,13 @@ def get_int_from_user(message: str) -> int:
     n_iter = 0
 
     while not isinstance(user_input, int) and n_iter < 3:
-        user_input = int(input(message))
+        user_input = input(message)
 
-        if not isinstance(user_input, int):
+        try:
+            user_input = int(user_input)
+        except ValueError:
             print(f"{user_input} is not an integer; please type in an integer.")
+
         n_iter += 1
 
     if not isinstance(user_input, int):
@@ -18,10 +24,8 @@ def get_int_from_user(message: str) -> int:
 
     return user_input
 
-
-if __name__ == "__main__":
-    from ..linear_regressor import DataGenerator, LinearRegressor
-
+####################################################################
+def run_linear_regression_demo():
     dg = DataGenerator()
     lr = LinearRegressor()
 
