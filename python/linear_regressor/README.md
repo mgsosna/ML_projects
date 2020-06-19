@@ -16,7 +16,7 @@ This repository also includes the following helper functions:
 * `analytical_reg`: calculate the analytical solution for N-dimensional data, when N > 1 (similar to R's `lm` function, but easier for iterating in a parameter scan)
 * `gen_preds`: generate model predictions on any-dimensional data, given a set of regression coefficients
 
-[grad_desc_lm.R](r/grad_desc_lm.R) includes all functions, and [grad_desc_demo.R](r/grad_desc_demo.R) includes code for visualizations.
+[grad_desc_lm.R](../../r/grad_desc_lm.R) includes all functions, and [grad_desc_demo.R](../../r/grad_desc_demo.R) includes code for visualizations.
 
 ## 2. Background
 ### 2.1 Regression

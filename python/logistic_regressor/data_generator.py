@@ -57,8 +57,6 @@ class DataGenerator:
         |  np.ndarray
         |    Probabilities of y = 1
         """
-
-        # So the form is
         probs = 1 / (1 + np.e ** -(intercept + beta * x))
         return probs
 
