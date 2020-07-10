@@ -1,4 +1,4 @@
 from .common import *
-from .linear_regressor import *
+from .regressors import *
 from .logistic_regressor import *
 

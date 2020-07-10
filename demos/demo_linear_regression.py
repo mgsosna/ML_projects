@@ -24,7 +24,7 @@ def get_int_from_user(message: str) -> int:
 
     return user_input
 
-####################################################################
+
 def run_linear_regression_demo():
     dg = DataGenerator()
     lr = LinearRegressor()

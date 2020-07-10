@@ -2,7 +2,7 @@ import logging
 import numpy as np
 from typing import Optional, Tuple
 
-from ..common import DataPrepper, ModelHelper, RegressionType
+from python.common import DataPrepper, ModelHelper, RegressionType
 
 
 class LogisticRegressor:
