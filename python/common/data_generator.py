@@ -56,23 +56,21 @@ class DataGenerator:
 
         intercept, slopes, noise = self._process_input_params(intercept, slopes, noise, n_feat)
 
-        # Initialize X and add intercept
-        X = np.full([n_obs, n_feat+1], np.nan)
-        X[:, 0] = 1
+        # Generate X
+        X = np.random.uniform(-100, 100, [n_obs, n_feat])
+        X = np.c_[np.ones((X.shape[0], 1)), X]   # add intercept
 
-        # Initialize output to the intercept
-        y = np.array([intercept] * n_obs)
+        # Generate noise
+        N = np.random.normal(0, noise, [n_obs, n_feat+1])  # each column is different feature's noise
 
         # Iteratively adjust y and update X
-        for i, slope, coef_noise in zip(range(1, n_feat+1), slopes, noise):
-            x_feat = np.random.uniform(-100, 100, n_obs)
-            y += x_feat * slope + np.random.normal(0, coef_noise, n_obs)
-            X[:, i] = x_feat
+        betas = np.array([intercept] + slopes)
+        y = X.dot(betas) + N.sum(axis=1)
 
         # Transpose y for proper matrix multiplication later
-        y = y.T
+        y = y.reshape(-1, 1)
 
-        return {'X': X, 'y': y, 'intercept': intercept, 'slopes': slopes, 'noise': noise}
+        return {'X': X, 'y': y, 'betas': betas, 'noise': noise}
 
     def _create_linear_data_inputs_valid(self,
                                          n_obs: int,
@@ -142,11 +140,11 @@ class DataGenerator:
             intercept = float(intercept)
 
         if slopes is None:
-            slopes = np.random.uniform(-10, 10, n_feat+1)
+            slopes = np.random.uniform(-10, 10, n_feat)
         else:
             slopes = [float(slope) for slope in slopes]
 
         if isinstance(noise, (int, float)):
-            noise = [noise] * n_feat
+            noise = [noise] * (n_feat + 1)
 
         return intercept, slopes, noise
