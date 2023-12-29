@@ -12,7 +12,7 @@ class Node:
         target_col: str
     ) -> None:
         self.df = self._check_df(df, target_col)
-        self.pk = self.set_pk()
+        self.pk = self.set_pk(target_col)
         self.gini = self.set_gini()
         self.left = None
         self.right = None
@@ -28,13 +28,13 @@ class Node:
             "target column cannot have values besides {0,1}"
         return df
 
-    def set_pk(self) -> float:
+    def set_pk(self, target_col: str) -> float:
         """
         Sets pk, the proportion of samples that are of the positive class.
         Assumes samples is a list of ints, where 1 is the positive class
         and 0 is the negative class.
         """
-        return np.mean(self.df['label'].values)
+        return np.mean(self.df[target_col].values)
 
     def set_gini(self) -> float:
         """
