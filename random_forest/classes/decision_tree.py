@@ -14,26 +14,49 @@ class DecisionTree:
         min_samples_leaf: int = 0
     ) -> None:
         self.root = root
-        self.max_depth = None
-        self.min_samples_leaf = None
+        self.max_depth = max_depth
+        self.min_samples_leaf = min_samples_leaf
 
     def build_tree(self) -> None:
+        node_left, node_right = self.process_node(self.root)
+        # TODO: finish
         pass
 
-    def process_node(self, node: Node, target_col: str):
+    # TODO: need support for getting to leaf node
+    def process_node(self, node: Node) -> tuple[Node, Node]:
+        """
+        Iterates through features, identifies split that minimizes
+        Gini impurity in child nodes, and identifies feature whose
+        split minimizes Gini impurity the most. Then returns child
+        nodes split on that feature.
+        """
         cols = list(node.df)
-        cols.remove(target_col)
+        cols.remove(node.target_col)
 
-        # TODO: update
+        # Get Gini impurity for best split for each column
+        d = {}
         for col in cols:
-            pass
+            d[col] = gini, node_lower, node_upper
+
+        # Select best column to split on
+        min_gini = np.inf
+        best_feature = None
+        for col, tup in d.items():
+            if tup[0] < min_gini:
+                min_gini = tup[0]
+                best_feature = col
+
+        if min_gini is np.inf or best_feature is None:
+            raise ValueError("Splitting node was unsuccessful.")
+
+        return d[col][1:]
 
 
     def split_on_feature(
         self,
         node: Node,
         feature: str
-    ) -> tuple[Node, Node]:
+    ) -> tuple[float, Node, Node]:
         """
         Iterate through values of a feature and identify split that minimizes
         weighted Gini impurity in child nodes.
@@ -52,7 +75,7 @@ class DecisionTree:
         df: pd.DataFrame,
         feature: str,
         threshold: int|float
-    ) -> None | tuple[int|float, Node, Node]:
+    ) -> None | tuple[float, Node, Node]:
         """
         Splits df on the feature threshold and generates nodes for the data
         subsets. If
