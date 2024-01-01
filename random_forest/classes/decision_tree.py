@@ -19,6 +19,14 @@ class DecisionTree:
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
 
+    # TODO: implement
+    def predict(self, features: pd.Series) -> int:
+        """
+        Given a vector of features, traverses the tree
+        to generate a predicted label.
+        """
+        pass
+
     def build_tree(self) -> None:
         features = list(self.root.df)
         features.remove(self.root.target_col)
@@ -31,7 +39,7 @@ class DecisionTree:
             if node:
 
                 # TODO: figure out what to do if already visited
-                node_left, node_right = self.process_node(node, features)
+                node_left, node_right = self._process_node(node, features)
                 current_node.left = node_left
                 current_node.right = node_right
 
@@ -44,7 +52,11 @@ class DecisionTree:
         return node_left, node_right
 
     # TODO: need support for getting to leaf node
-    def process_node(self, node: Node|None, features: list[str]) -> tuple[Node|None, Node|None]:
+    def _process_node(
+        self,
+        node: Node|None,
+        features: list[str]
+    ) -> tuple[Node|None, Node|None]:
         """
         Iterates through features, identifies split that minimizes
         Gini impurity in child nodes, and identifies feature whose
