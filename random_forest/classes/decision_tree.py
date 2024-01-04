@@ -10,20 +10,36 @@ class DecisionTree:
     """
     def __init__(
         self,
-        root: Node,
+        df: pd.DataFrame,
+        target_col: str,
         max_depth: int = 2,
         min_samples_leaf: int = 0
     ) -> None:
-        self.root = root
+        self.root = Node(df, target_col)
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
 
-    def predict(self, features: pd.Series) -> int:
+    def classify(self, feature_df: pd.DataFrame) -> list[int]:
         """
-        Given a vector of features, traverses the tree
-        to generate a predicted label.
+        Given a dataframe where each row is a feature vector, traverses
+        the tree to generate a predicted label.
         """
-        return self.root.classify(features)
+        return [self._classify(self.root, f) for i, f in feature_df.iterrows()]
+
+    def _classify(self, node: Node, features: pd.Series) -> int:
+        """
+        Given a vector of features, traverse the node's children until
+        a leaf is reached, then return the most frequent class in the node.
+        If there are an equal number of positive and negative labels,
+        predicts the negative class.
+        """
+        # Child node
+        if not node.feature or not node.threshold:
+            return int(node.pk > 0.5)
+
+        if features[node.feature] < node.threshold:
+            return self._classify(node.left, features)
+        return self._classify(node.right, features)
 
     def build_tree(self, verbose: bool = False) -> None:
         """
@@ -49,12 +65,15 @@ class DecisionTree:
 
                 if verbose:
                     print(depth)
+                    print(current_node.feature)
+                    print(current_node.threshold)
+                    print()
 
         return None
 
     def _process_node(
         self,
-        node: Node|None,
+        node: Node,
         features: list[str]
     ) -> tuple[Node|None, Node|None]:
         """
@@ -63,10 +82,6 @@ class DecisionTree:
         split minimizes Gini impurity the most. Then returns child
         nodes split on that feature.
         """
-        # Don't process if we're at a leaf
-        if not node:
-            return None, None
-
         # Get Gini impurity for best split for each column
         d = {}
         for col in features:
@@ -76,16 +91,19 @@ class DecisionTree:
         min_gini = np.inf
         best_feature = None
         for col, tup in d.items():
+            print(f"Current feature: {col}")
+            print(f"Best feature: {best_feature}")
+            print(f"Feature Gini: {tup[0]}, min_gini: {min_gini}")
             if tup[0] < min_gini:
                 min_gini = tup[0]
                 best_feature = col
 
-        if min_gini is np.inf or best_feature is None:
-            raise ValueError("Splitting node was unsuccessful.")
-
         # Only update if the best split reduces Gini impurity
         if min_gini < node.gini:
-            return d[col][1:]
+            # Update node
+            node.feature = best_feature
+            node.threshold = d[col][1]
+            return d[col][2:]
 
         return None, None
 
@@ -93,10 +111,11 @@ class DecisionTree:
         self,
         node: Node,
         feature: str
-    ) -> tuple[float, Node, Node]:
+    ) -> tuple[float, int|float, Node, Node]:
         """
         Iterate through values of a feature and identify split that minimizes
-        weighted Gini impurity in child nodes.
+        weighted Gini impurity in child nodes. Returns tuple of weighted Gini
+        impurity, feature threshold, and left and right child nodes.
         """
         values = []
 
@@ -113,7 +132,7 @@ class DecisionTree:
         node: Node,
         feature: str,
         threshold: int|float
-    ) -> tuple[float, Node|None, Node|None]:
+    ) -> tuple[float, int|float, Node|None, Node|None]:
         """
         Splits df on the feature threshold and generates nodes for the data
         subsets.
@@ -123,7 +142,7 @@ class DecisionTree:
 
         # If threshold doesn't split the data at all, end early
         if len(df_lower) == 0 or len(df_upper) == 0:
-            return node.gini, None, None
+            return node.gini, None, None, None
 
         node_lower = Node(df_lower, self.root.target_col)
         node_upper = Node(df_upper, self.root.target_col)
@@ -133,4 +152,4 @@ class DecisionTree:
 
         weighted_gini = node_lower.gini * prop_lower + node_upper.gini * prop_upper
 
-        return weighted_gini, node_lower, node_upper
+        return weighted_gini, threshold, node_lower, node_upper

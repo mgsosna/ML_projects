@@ -3,8 +3,7 @@ import pandas as pd
 
 class Node:
     """
-    Node in a decision tree. Assumes target_col in df consists of
-    0s and 1s.
+    Node in a decision tree.
 
     Parameters
     ----------
@@ -46,21 +45,6 @@ class Node:
         # For inference
         self.feature = None
         self.threshold = None
-
-    def classify(self, features: pd.Series) -> int:
-        """
-        Given a vector of features, traverse the node's children until
-        a leaf is reached, then return the most frequent class in the node.
-        If there are an equal number of positive and negative labels,
-        predicts the negative class.
-        """
-        # Child node
-        if not self.feature or not self.threshold:
-            return int(self.pk > 0.5)
-
-        if features[self.feature] < self.threshold:
-            return self.classify(self.left)
-        return self.classify(self.right)
 
     def _check_df(
         self,
