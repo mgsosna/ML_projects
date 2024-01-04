@@ -50,12 +50,13 @@ class Node:
     def classify(self, features: pd.Series) -> int:
         """
         Given a vector of features, traverse the node's children until
-        a leaf is reached, then return positive label with probability
-        pk.
+        a leaf is reached, then return the most frequent class in the node.
+        If there are an equal number of positive and negative labels,
+        predicts the negative class.
         """
         # Child node
         if not self.feature or not self.threshold:
-            return np.random.choice([0, 1], p=[1-self.pk, self.pk])
+            return int(self.pk > 0.5)
 
         if features[self.feature] < self.threshold:
             return self.classify(self.left)

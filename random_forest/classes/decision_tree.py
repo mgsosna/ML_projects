@@ -11,47 +11,47 @@ class DecisionTree:
     def __init__(
         self,
         root: Node,
-        max_depth: int = 10,
+        max_depth: int = 2,
         min_samples_leaf: int = 0
     ) -> None:
         self.root = root
-        self.stack = [root]
         self.max_depth = max_depth
         self.min_samples_leaf = min_samples_leaf
 
-    # TODO: implement
     def predict(self, features: pd.Series) -> int:
         """
         Given a vector of features, traverses the tree
         to generate a predicted label.
         """
-        pass
+        return self.root.classify(features)
 
-    def build_tree(self) -> None:
+    def build_tree(self, verbose: bool = False) -> None:
+        """
+        Builds tree using depth-first traversal. If verbose,
+        prints the node depths as the tree is being built.
+        """
         features = list(self.root.df)
         features.remove(self.root.target_col)
 
-        current_node = self.root
+        stack = [(self.root, 0)]
 
-        while self.stack:
-            node = self.stack.pop()
+        while stack:
+            current_node, depth = stack.pop()
 
-            if node:
+            if depth <= self.max_depth:
+                left, right = self._process_node(current_node, features)
 
-                # TODO: figure out what to do if already visited
-                node_left, node_right = self._process_node(node, features)
-                current_node.left = node_left
-                current_node.right = node_right
+                if left and right:
+                    current_node.left = left
+                    current_node.right = right
+                    stack.append((left, depth+1))
+                    stack.append((right, depth+1))
 
-                self.stack.append(node_left)
-                self.stack.append(node_right)
+                if verbose:
+                    print(depth)
 
-        # TODO: finish. For now just processes the root and first children.
-        #node_left, node_right = self.process_node(self.root, features)
+        return None
 
-        return node_left, node_right
-
-    # TODO: need support for getting to leaf node
     def _process_node(
         self,
         node: Node|None,
@@ -103,34 +103,33 @@ class DecisionTree:
         for thresh in node.df[feature].unique():
             if thresh == node.df[feature].max():
                 pass
-            values.append(self._process_split(node.df, feature, thresh))
+            values.append(self._process_split(node, feature, thresh))
 
-        # TODO: add handling for empty list
         values = [v for v in values if v is not None]
         return min(values, key=lambda x: x[0])
 
     def _process_split(
         self,
-        df: pd.DataFrame,
+        node: Node,
         feature: str,
         threshold: int|float
-    ) -> None | tuple[float, Node, Node]:
+    ) -> tuple[float, Node|None, Node|None]:
         """
         Splits df on the feature threshold and generates nodes for the data
-        subsets. If
+        subsets.
         """
-        df_lower = df[df[feature] <= threshold]
-        df_upper = df[df[feature] > threshold]
+        df_lower = node.df[node.df[feature] <= threshold]
+        df_upper = node.df[node.df[feature] > threshold]
 
-        # If partition results in nothing, end early
+        # If threshold doesn't split the data at all, end early
         if len(df_lower) == 0 or len(df_upper) == 0:
-            return None
+            return node.gini, None, None
 
         node_lower = Node(df_lower, self.root.target_col)
         node_upper = Node(df_upper, self.root.target_col)
 
-        prop_lower = len(df_lower) / len(df)
-        prop_upper = len(df_upper) / len(df)
+        prop_lower = len(df_lower) / len(node.df)
+        prop_upper = len(df_upper) / len(node.df)
 
         weighted_gini = node_lower.gini * prop_lower + node_upper.gini * prop_upper
 

@@ -26,7 +26,5 @@ df = pd.DataFrame({
 node = Node(df, target_col='label')
 decision_tree = DecisionTree(node)
 
-left, right = decision_tree.build_tree()
-
-print(f"Left: {left}")
-print(f"Right: {right}")
+decision_tree.build_tree(verbose=True)
+print(f"Tree info: {vars(decision_tree.root)}")
