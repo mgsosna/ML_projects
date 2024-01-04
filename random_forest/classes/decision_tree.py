@@ -12,7 +12,7 @@ class DecisionTree:
         self,
         df: pd.DataFrame,
         target_col: str,
-        max_depth: int = 2,
+        max_depth: int = 4,
         min_samples_leaf: int = 0
     ) -> None:
         self.root = Node(df, target_col)
@@ -34,7 +34,7 @@ class DecisionTree:
         predicts the negative class.
         """
         # Child node
-        if not node.feature or not node.threshold:
+        if node.feature is None or node.threshold is None:
             return int(node.pk > 0.5)
 
         if features[node.feature] < node.threshold:
@@ -85,15 +85,14 @@ class DecisionTree:
         # Get Gini impurity for best split for each column
         d = {}
         for col in features:
-            d[col] = self.split_on_feature(node, col)
+            feature_info = self.split_on_feature(node, col)
+            if feature_info[0] is not None:
+                d[col] = feature_info
 
         # Select best column to split on
         min_gini = np.inf
         best_feature = None
         for col, tup in d.items():
-            print(f"Current feature: {col}")
-            print(f"Best feature: {best_feature}")
-            print(f"Feature Gini: {tup[0]}, min_gini: {min_gini}")
             if tup[0] < min_gini:
                 min_gini = tup[0]
                 best_feature = col
@@ -124,8 +123,10 @@ class DecisionTree:
                 pass
             values.append(self._process_split(node, feature, thresh))
 
-        values = [v for v in values if v is not None]
-        return min(values, key=lambda x: x[0])
+        values = [v for v in values if v[1] is not None]
+        if values:
+            return min(values, key=lambda x: x[0])
+        return None, None, None, None
 
     def _process_split(
         self,

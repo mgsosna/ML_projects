@@ -15,8 +15,8 @@ npc = partial(np.random.choice, a=[0,1], size=1)
 def gen_df(n: int) -> pd.DataFrame:
     labels = np.random.choice([0,1], n)
     return pd.DataFrame({
-        'strong_continuous': [npn(2)[0] if x else npn(0)[0] for x in labels],
-        'weak_continuous': [npn(0.5)[0] if x else npn(0)[0] for x in labels],
+        'strong_continuous': [npn(3)[0] if x else npn(0)[0] for x in labels],
+        'weak_continuous': [npn(1)[0] if x else npn(0)[0] for x in labels],
         'strong_categorical': [
             npc(p=[0.8, 0.2])[0] if x else npc(p=[0.5,0.5])[0]
             for x in labels
@@ -35,12 +35,10 @@ decision_tree.build_tree(verbose=True)
 preds = decision_tree.classify(test_df)
 
 # Display results
-print(f"Tree info: {vars(decision_tree.root)}")
 print(f"Predictions: {preds}")
-
-print(decision_tree.root.pk)
-print(decision_tree.root.left.pk)
-print(decision_tree.root.right.pk)
-
 # Calculate accuracy
 print(f"Accuracy: {round(accuracy_score(test_df['label'], preds), 2)}")
+print()
+print(f"Root pk: {decision_tree.root.pk}")
+print(f"Left1 pk: {decision_tree.root.left.pk}, right1 pk: {decision_tree.root.right.pk}")
+print(f"Left2 pk: {decision_tree.root.left.left.pk}, right2 pk: {decision_tree.root.right.right.pk}")
