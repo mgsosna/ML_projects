@@ -12,12 +12,10 @@ class DecisionTree:
         self,
         df: pd.DataFrame,
         target_col: str,
-        max_depth: int = 4,
-        min_samples_leaf: int = 0
+        max_depth: int = 4
     ) -> None:
         self.root = Node(df, target_col)
         self.max_depth = max_depth
-        self.min_samples_leaf = min_samples_leaf
 
     def classify(self, feature_df: pd.DataFrame) -> list[int]:
         """
@@ -85,7 +83,7 @@ class DecisionTree:
         # Get Gini impurity for best split for each column
         d = {}
         for col in features:
-            feature_info = self.split_on_feature(node, col)
+            feature_info = node.split_on_feature(col)
             if feature_info[0] is not None:
                 d[col] = feature_info
 
@@ -105,52 +103,3 @@ class DecisionTree:
             return d[col][2:]
 
         return None, None
-
-    def split_on_feature(
-        self,
-        node: Node,
-        feature: str
-    ) -> tuple[float, int|float, Node, Node]:
-        """
-        Iterate through values of a feature and identify split that minimizes
-        weighted Gini impurity in child nodes. Returns tuple of weighted Gini
-        impurity, feature threshold, and left and right child nodes.
-        """
-        values = []
-
-        for thresh in node.df[feature].unique():
-            if thresh == node.df[feature].max():
-                pass
-            values.append(self._process_split(node, feature, thresh))
-
-        values = [v for v in values if v[1] is not None]
-        if values:
-            return min(values, key=lambda x: x[0])
-        return None, None, None, None
-
-    def _process_split(
-        self,
-        node: Node,
-        feature: str,
-        threshold: int|float
-    ) -> tuple[float, int|float, Node|None, Node|None]:
-        """
-        Splits df on the feature threshold and generates nodes for the data
-        subsets.
-        """
-        df_lower = node.df[node.df[feature] <= threshold]
-        df_upper = node.df[node.df[feature] > threshold]
-
-        # If threshold doesn't split the data at all, end early
-        if len(df_lower) == 0 or len(df_upper) == 0:
-            return node.gini, None, None, None
-
-        node_lower = Node(df_lower, self.root.target_col)
-        node_upper = Node(df_upper, self.root.target_col)
-
-        prop_lower = len(df_lower) / len(node.df)
-        prop_upper = len(df_upper) / len(node.df)
-
-        weighted_gini = node_lower.gini * prop_lower + node_upper.gini * prop_upper
-
-        return weighted_gini, threshold, node_lower, node_upper

@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from typing_extensions import Self
 
 class Node:
     """
@@ -70,3 +71,50 @@ class Node:
         Sets the Gini impurity.
         """
         return 1 - self.pk**2 - (1 - self.pk)**2
+
+    def split_on_feature(
+        self,
+        feature: str
+    ) -> tuple[float, int|float, Self, Self]:
+        """
+        Iterate through values of a feature and identify split that minimizes
+        weighted Gini impurity in child nodes. Returns tuple of weighted Gini
+        impurity, feature threshold, and left and right child nodes.
+        """
+        values = []
+
+        for thresh in self.df[feature].unique():
+            if thresh == self.df[feature].max():
+                pass
+            values.append(self._process_split(feature, thresh))
+
+        values = [v for v in values if v[1] is not None]
+        if values:
+            return min(values, key=lambda x: x[0])
+        return None, None, None, None
+
+    def _process_split(
+        self,
+        feature: str,
+        threshold: int|float
+    ) -> tuple[float, int|float, Self|None, Self|None]:
+        """
+        Splits df on the feature threshold and generates nodes for the data
+        subsets.
+        """
+        df_lower = self.df[self.df[feature] <= threshold]
+        df_upper = self.df[self.df[feature] > threshold]
+
+        # If threshold doesn't split the data at all, end early
+        if len(df_lower) == 0 or len(df_upper) == 0:
+            return self.gini, None, None, None
+
+        node_lower = Node(df_lower, self.target_col)
+        node_upper = Node(df_upper, self.target_col)
+
+        prop_lower = len(df_lower) / len(self.df)
+        prop_upper = len(df_upper) / len(self.df)
+
+        weighted_gini = node_lower.gini * prop_lower + node_upper.gini * prop_upper
+
+        return weighted_gini, threshold, node_lower, node_upper
