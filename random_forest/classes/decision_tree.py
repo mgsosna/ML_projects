@@ -7,11 +7,18 @@ class DecisionTree:
     """
     Tree of nodes, with methods for building tree in a way that minimizes
     Gini impurity.
+
+    Parameters
+    ----------
+    feature_select : str
+      The method for selecting features: ['all', 'sqrt']. Latter
+      is used when training a tree in a random forest.
     """
     def __init__(
         self,
         df: pd.DataFrame,
         target_col: str,
+        feature_select: float = 1.0,
         max_depth: int = 4
     ) -> None:
         self.root = Node(df, target_col)
@@ -39,10 +46,22 @@ class DecisionTree:
             return self._classify(node.left, features)
         return self._classify(node.right, features)
 
-    def build_tree(self, verbose: bool = False) -> None:
+    def build_tree(
+        self,
+        verbose: bool = False
+    ) -> None:
         """
-        Builds tree using depth-first traversal. If verbose,
-        prints the node depths as the tree is being built.
+        Builds tree using depth-first traversal.
+
+        Parameters
+        ----------
+        feature_select : str
+          The method for selecting features: ['all', 'sqrt']. Latter
+          is used when training a tree in a random forest.
+
+        verbose : str
+            If verbose, prints the node depths as the tree is being
+            built.
         """
         features = list(self.root.df)
         features.remove(self.root.target_col)
@@ -80,6 +99,16 @@ class DecisionTree:
         split minimizes Gini impurity the most. Then returns child
         nodes split on that feature.
         """
+        # Randomly select features. No randomness if
+        # self.feature_select = 1.0 (default).
+        features = list(
+            np.random.choice(
+                features,
+                int(self.feature_select*len(features)),
+                replace=False
+            )
+        )
+
         # Get Gini impurity for best split for each column
         d = {}
         for col in features:
