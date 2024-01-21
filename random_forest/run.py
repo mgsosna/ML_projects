@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
-from classes import DecisionTree, Node
+from classes import DecisionTree, Node, RandomForest
 
 # Set seed for reproducibility
 np.random.seed(42)
@@ -28,17 +28,23 @@ def gen_df(n: int) -> pd.DataFrame:
 train_df = gen_df(500)
 test_df = gen_df(100)
 
-decision_tree = DecisionTree(train_df, target_col='label')
-decision_tree.build_tree(verbose=True)
+#decision_tree = DecisionTree(train_df, target_col='label')
+#decision_tree.build_tree(verbose=True)
 
 # Generate predictions
-preds = decision_tree.classify(test_df)
+#preds = decision_tree.classify(test_df)
 
 # Display results
-print(f"Predictions: {preds}")
+#print(f"Predictions: {preds}")
 # Calculate accuracy
+# print(f"Accuracy: {round(accuracy_score(test_df['label'], preds), 2)}")
+# print()
+# print(f"Root pk: {decision_tree.root.pk}")
+# print(f"Left1 pk: {decision_tree.root.left.pk}, right1 pk: {decision_tree.root.right.pk}")
+# print(f"Left2 pk: {decision_tree.root.left.left.pk}, right2 pk: {decision_tree.root.right.right.pk}")
+
+forest = RandomForest(train_df, target_col='label')
+forest.train()
+
+preds = forest.classify(test_df)
 print(f"Accuracy: {round(accuracy_score(test_df['label'], preds), 2)}")
-print()
-print(f"Root pk: {decision_tree.root.pk}")
-print(f"Left1 pk: {decision_tree.root.left.pk}, right1 pk: {decision_tree.root.right.pk}")
-print(f"Left2 pk: {decision_tree.root.left.left.pk}, right2 pk: {decision_tree.root.right.right.pk}")

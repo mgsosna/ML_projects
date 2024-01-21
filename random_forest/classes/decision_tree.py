@@ -22,6 +22,7 @@ class DecisionTree:
         max_depth: int = 4
     ) -> None:
         self.root = Node(df, target_col)
+        self.feature_select = feature_select
         self.max_depth = max_depth
 
     def classify(self, feature_df: pd.DataFrame) -> list[int]:
@@ -86,7 +87,7 @@ class DecisionTree:
                     print(current_node.threshold)
                     print()
 
-        return None
+        return self
 
     def _process_node(
         self,
