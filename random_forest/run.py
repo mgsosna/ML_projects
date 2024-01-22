@@ -12,6 +12,7 @@ np.random.seed(42)
 npn = partial(np.random.normal, scale=1, size=1)
 npc = partial(np.random.choice, a=[0,1], size=1)
 
+# Use this function for a detailed look at decision tree formation
 def gen_df(n: int) -> pd.DataFrame:
     labels = np.random.choice([0,1], n)
     return pd.DataFrame({
@@ -24,27 +25,36 @@ def gen_df(n: int) -> pd.DataFrame:
         'label': labels
     })
 
-# Create node and decision tree
+# TODO: write a function for high-dimensional data
+# Use this function for a random forest using many features
+#def gen_df_hd(n: int) -> pd.DataFrame:
+#    labels = np.random.choice([0,1], n)
+#
+
+# Generate data
+print("Generating train and test data")
 train_df = gen_df(500)
 test_df = gen_df(100)
 
-#decision_tree = DecisionTree(train_df, target_col='label')
-#decision_tree.build_tree(verbose=True)
+# 1. Decision Tree
+print("1. Fitting a decision tree")
+decision_tree = DecisionTree(train_df, target_col='label')
+decision_tree.build_tree()
+tree_preds = decision_tree.classify(test_df)
+tree_accuracy = round(accuracy_score(test_df['label'], tree_preds), 3)
 
-# Generate predictions
-#preds = decision_tree.classify(test_df)
+# 2. Random Forest
+print("2. Fitting a random forest")
+forest = RandomForest(train_df, target_col='label', n_trees=20)
+forest.train()
+forest_preds = forest.classify(test_df)
+forest_tree_preds = forest.forest[1].classify(test_df)
+
+forest_accuracy = round(accuracy_score(test_df['label'], forest_preds), 3)
+forest_tree_accuracy = round(accuracy_score(test_df['label'], forest_tree_preds), 3)
 
 # Display results
-#print(f"Predictions: {preds}")
-# Calculate accuracy
-# print(f"Accuracy: {round(accuracy_score(test_df['label'], preds), 2)}")
-# print()
-# print(f"Root pk: {decision_tree.root.pk}")
-# print(f"Left1 pk: {decision_tree.root.left.pk}, right1 pk: {decision_tree.root.right.pk}")
-# print(f"Left2 pk: {decision_tree.root.left.left.pk}, right2 pk: {decision_tree.root.right.right.pk}")
-
-forest = RandomForest(train_df, target_col='label')
-forest.train()
-
-preds = forest.classify(test_df)
-print(f"Accuracy: {round(accuracy_score(test_df['label'], preds), 2)}")
+print("Accuracy")
+print(f" * Single decision tree: {tree_accuracy}")
+print(f" * Tree in random forest: {forest_tree_accuracy}")
+print(f" * Full random forest: {forest_accuracy}")

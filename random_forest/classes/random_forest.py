@@ -36,16 +36,23 @@ class RandomForest:
         """
         Fit the forest to self.df
         """
+        print("Bootstrapping data...")
         bootstrap_dfs = [self._bootstrap() for _ in range(self.n_trees)]
         self.forest = [
-            DecisionTree(bdf, self.target_col, self.feature_select)
+            DecisionTree(bdf, self.target_col, self.feature_select, self.max_depth)
             for bdf in bootstrap_dfs
         ]
+        print("Building trees...")
         self.forest = [tree.build_tree() for tree in self.forest]
         print(f"Trained forest with {self.n_trees} trees.")
         return None
 
     def classify(self, feature_df: pd.DataFrame) -> int:
+        """
+        Classify inputted feature vectors. Each tree in the forest generates
+        a predicted label and the most common label for each feature vector
+        is returned.
+        """
         if not self.forest:
             raise ValueError("RandomForest instance must first be trained.")
         preds = pd.DataFrame([tree.classify(feature_df) for tree in self.forest])
