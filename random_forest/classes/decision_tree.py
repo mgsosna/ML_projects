@@ -52,17 +52,8 @@ class DecisionTree:
         verbose: bool = False
     ) -> None:
         """
-        Builds tree using depth-first traversal.
-
-        Parameters
-        ----------
-        feature_select : str
-          The method for selecting features: ['all', 'sqrt']. Latter
-          is used when training a tree in a random forest.
-
-        verbose : str
-            If verbose, prints the node depths as the tree is being
-            built.
+        Builds tree using depth-first traversal. If verbose, prints
+        the node depths as the tree is being built.
         """
         features = list(self.root.df)
         features.remove(self.root.target_col)
