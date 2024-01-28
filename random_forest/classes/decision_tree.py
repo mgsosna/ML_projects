@@ -5,8 +5,7 @@ from .node import Node
 
 class DecisionTree:
     """
-    Tree of nodes, with methods for building tree in a way that minimizes
-    Gini impurity.
+    Decision tree classifier.
 
     Parameters
     ----------
@@ -22,6 +21,8 @@ class DecisionTree:
         max_depth: int = 4
     ) -> None:
         self.root = Node(df, target_col)
+        self.features = list(df)
+        self.features.remove(target_col)
         self.feature_select = feature_select
         self.max_depth = max_depth
 
@@ -55,22 +56,19 @@ class DecisionTree:
         Builds tree using depth-first traversal. If verbose, prints
         the node depths as the tree is being built.
         """
-        features = list(self.root.df)
-        features.remove(self.root.target_col)
-
         stack = [(self.root, 0)]
 
         while stack:
             current_node, depth = stack.pop()
 
             if depth <= self.max_depth:
-                left, right = self._process_node(current_node, features)
+                left, right = self._process_node(current_node)
 
                 if left and right:
                     current_node.left = left
                     current_node.right = right
-                    stack.append((left, depth+1))
                     stack.append((right, depth+1))
+                    stack.append((left, depth+1))
 
                 if verbose:
                     print(depth)
@@ -82,8 +80,7 @@ class DecisionTree:
 
     def _process_node(
         self,
-        node: Node,
-        features: list[str]
+        node: Node
     ) -> tuple[Node|None, Node|None]:
         """
         Iterates through features, identifies split that minimizes
@@ -95,8 +92,8 @@ class DecisionTree:
         # self.feature_select = 1.0 (default).
         features = list(
             np.random.choice(
-                features,
-                int(self.feature_select*len(features)),
+                self.features,
+                int(self.feature_select*len(self.features)),
                 replace=False
             )
         )

@@ -2,6 +2,7 @@ from functools import partial
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
 
 from classes import DecisionTree, Node, RandomForest
 
@@ -25,7 +26,6 @@ def gen_df(n: int) -> pd.DataFrame:
         'label': labels
     })
 
-# TODO: write a function for high-dimensional data
 # Use this function for a random forest using many features
 def gen_df_hd(n_rows: int, n_cols: int) -> pd.DataFrame:
 
@@ -64,15 +64,34 @@ forest.train()
 forest_preds = forest.classify(test_df)
 forest_accuracy = round(accuracy_score(test_df['label'], forest_preds), 3)
 
-# Get accuracy of average tree in forest
+# 3. Average tree in forest
+print("3. Calculating average tree accuracy")
 tree_accs = []
 for i in range(forest.n_trees):
     forest_tree_preds = forest.forest[i].classify(test_df)
     tree_accs.append(accuracy_score(test_df['label'], forest_tree_preds))
 forest_tree_accuracy = np.mean(tree_accs).round(3)
 
+# 4. Scikit-learn
+print("4. Fitting scikit-learn forest")
+X_train = train_df.copy()
+X_train = X_train.drop('label', axis=1)
+
+X_test = test_df.copy()
+X_test = X_test.drop('label', axis=1)
+
+y_train = train_df['label']
+y_test = test_df['label']
+
+rf = RandomForestClassifier(n_estimators=50)
+rf.fit(X_train, y_train)
+
+sklearn_preds = rf.predict(X_test)
+sklearn_acc = round(accuracy_score(y_test, sklearn_preds), 3)
+
 # Display results
 print("Accuracy")
-print(f" * Single decision tree: {tree_accuracy}")
-print(f" * Average random forest tree: {forest_tree_accuracy}")
-print(f" * Full random forest: {forest_accuracy}")
+print(f" * Single decision tree:   {tree_accuracy}")
+print(f" * Avg random forest tree: {forest_tree_accuracy}")
+print(f" * Full random forest:     {forest_accuracy}")
+print(f" * Scikit-learn forest:    {sklearn_acc}")

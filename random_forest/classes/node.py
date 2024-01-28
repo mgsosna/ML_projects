@@ -84,8 +84,6 @@ class Node:
         values = []
 
         for thresh in self.df[feature].unique():
-            if thresh == self.df[feature].max():
-                pass
             values.append(self._process_split(feature, thresh))
 
         values = [v for v in values if v[1] is not None]
@@ -99,8 +97,9 @@ class Node:
         threshold: int|float
     ) -> tuple[float, int|float, Self|None, Self|None]:
         """
-        Splits df on the feature threshold and generates nodes for the data
-        subsets.
+        Splits df on the feature threshold. Returns weighted Gini
+        impurity, inputted threshold, and child nodes. If split
+        results in empty subset, returns Gini impurity and None's.
         """
         df_lower = self.df[self.df[feature] <= threshold]
         df_upper = self.df[self.df[feature] > threshold]
