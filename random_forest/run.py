@@ -28,6 +28,10 @@ def gen_df(n: int) -> pd.DataFrame:
 
 # Use this function for a random forest using many features
 def gen_df_hd(n_rows: int, n_cols: int) -> pd.DataFrame:
+    """
+    Note: actual df has 2*n_cols, since we produce both
+    a continuous and categorical feature for each col.
+    """
 
     labels = np.random.choice([0,1], n_rows)
     d = {'label': labels}
